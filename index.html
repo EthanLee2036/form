@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grant 2262-RA — Voting Form</title>
+
+  <!-- Supabase JS client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #f7f8fa;
+      --surface:       #ffffff;
+      --surface-2:     #f3f4f6;
+      --border:        #e5e7eb;
+      --border-strong: #d1d5db;
+      --text:          #111827;
+      --text-2:        #4b5563;
+      --text-3:        #6b7280;
+      --text-4:        #9ca3af;
+
+      --brand:         #2563eb;
+      --brand-hover:   #1d4ed8;
+      --brand-soft:    #eff6ff;
+      --brand-border:  #bfdbfe;
+
+      --success:       #059669;
+      --success-soft:  #ecfdf5;
+      --success-border:#a7f3d0;
+      --danger:        #dc2626;
+      --danger-soft:   #fef2f2;
+      --danger-border: #fecaca;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+      --shadow:    0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.05);
+
+      --radius-sm: 6px;
+      --radius:    8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ─── LAYOUT ─── */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: saturate(180%) blur(8px);
+    }
+    .app-header-inner {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .app-logo .dot {
+      width: 8px; height: 8px;
+      background: var(--brand);
+      border-radius: 50%;
+    }
+    .app-header .deadline-pill {
+      margin-left: auto;
+      font-size: 12.5px;
+      color: var(--text-2);
+      background: var(--surface-2);
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+    .app-header .deadline-pill strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      margin-bottom: 32px;
+    }
+    .page-header .eyebrow {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+    .page-header .subtitle {
+      font-size: 16px;
+      color: var(--text-2);
+      margin: 0;
+    }
+
+    /* ─── CALLOUT BOX ─── */
+    .callout {
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 32px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .callout-icon {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      color: var(--brand);
+      margin-top: 1px;
+    }
+    .callout-body {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .callout-body p { margin: 0 0 6px; }
+    .callout-body p:last-child { margin-bottom: 0; }
+    .callout-body strong { font-weight: 600; }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .card-header .num {
+      width: 28px; height: 28px;
+      background: var(--brand);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .card-header h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .card-header .badge-count {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-3);
+      background: var(--surface-2);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+    .card-body {
+      padding: 20px 24px;
+    }
+
+    /* ─── FORM ELEMENTS ─── */
+    .field-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) {
+      .field-group { grid-template-columns: 1fr; }
+    }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 6px;
+    }
+    .field label .req {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+    .input, .textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 14.5px;
+      padding: 9px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input:focus, .textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-soft);
+    }
+    .textarea {
+      resize: vertical;
+      min-height: 64px;
+      line-height: 1.5;
+    }
+    .textarea::placeholder, .input::placeholder {
+      color: var(--text-4);
+    }
+
+    /* ─── CANDIDATE ITEM ─── */
+    .candidate {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      transition: background-color 0.15s;
+    }
+    .candidate:last-child { border-bottom: none; }
+    .candidate.scored {
+      background: #fafbfc;
+    }
+    .candidate-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .candidate-id {
+      display: inline-flex;
+      align-items: center;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .candidate.priority .candidate-id {
+      background: var(--brand-soft);
+      color: var(--brand);
+      border-color: var(--brand-border);
+    }
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brand);
+      background: var(--brand-soft);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--brand-border);
+      flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .candidate-title {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+      line-height: 1.35;
+    }
+    .candidate-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      font-size: 12.5px;
+      color: var(--text-3);
+      margin-bottom: 10px;
+    }
+    .candidate-meta span {
+      display: inline-flex;
+      align-items: center;
+    }
+    .candidate-meta span + span::before {
+      content: "·";
+      margin-right: 8px;
+      color: var(--text-4);
+    }
+    .candidate-rationale {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.55;
+      margin: 0 0 16px;
+    }
+
+    /* ─── SCORE INPUT ─── */
+    .score-block { margin-bottom: 12px; }
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .score-pips {
+      display: inline-flex;
+      gap: 0;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .pip {
+      width: 36px; height: 32px;
+      border: none;
+      border-right: 1px solid var(--border);
+      background: transparent;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background-color 0.1s, color 0.1s;
+      padding: 0;
+    }
+    .pip:last-child { border-right: none; }
+    .pip:hover:not(.selected) {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+    .pip.selected {
+      background: var(--brand);
+      color: white;
+      font-weight: 600;
+    }
+    .pip.in-range:not(.selected) {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+    .score-display {
+      font-size: 13px;
+      color: var(--text-3);
+      font-weight: 500;
+    }
+    .score-display.has-score { color: var(--text); }
+    .score-display.has-score strong {
+      color: var(--brand);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .score-clear {
+      font-size: 12px;
+      color: var(--text-3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 6px;
+      margin-left: auto;
+      border-radius: var(--radius-sm);
+    }
+    .score-clear:hover {
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+    .score-clear.hidden { display: none; }
+
+    /* ─── OPEN QUESTIONS ─── */
+    .open-q {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .open-q:last-child { border-bottom: none; }
+    .open-q .q-num {
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--brand);
+      background: var(--brand-soft);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+    }
+    .open-q .q-text {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: var(--text);
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+
+    /* ─── SUBMIT BAR ─── */
+    .submit-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow);
+    }
+    .progress-info {
+      flex: 1;
+      min-width: 200px;
+    }
+    .progress-info .label {
+      font-size: 12.5px;
+      color: var(--text-3);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .progress-info .count {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .progress-info .count strong { color: var(--brand); }
+    .progress-bar {
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--brand);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background-color 0.15s, transform 0.05s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: var(--brand);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--brand-hover); }
+    .btn-primary:active:not(:disabled) { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ─── STATUS ─── */
+    .status {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .status.show { display: flex; }
+    .status-icon {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      margin-top: 1px;
+    }
+    .status.error {
+      background: var(--danger-soft);
+      border: 1px solid var(--danger-border);
+      color: #991b1b;
+    }
+    .status.error .status-icon { color: var(--danger); }
+    .status.success {
+      background: var(--success-soft);
+      border: 1px solid var(--success-border);
+      color: #065f46;
+    }
+    .status.success .status-icon { color: var(--success); }
+    .status.info {
+      background: var(--brand-soft);
+      border: 1px solid var(--brand-border);
+      color: #1e40af;
+    }
+    .status.info .status-icon { color: var(--brand); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 24px;
+      font-size: 12.5px;
+      color: var(--text-4);
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="app-logo">
+        <span class="dot"></span>
+        <span>Grant 2262-RA</span>
+      </div>
+      <div class="deadline-pill">
+        Deadline: <strong>EOD Mon 11 May 2026</strong>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="page-header">
+      <div class="eyebrow">Voting Form · V1.1</div>
+      <h1>Case Study &amp; Interview Candidate Selection</h1>
+      <p class="subtitle">Comprehensive Impact Assessment of EuroQol Research Foundation</p>
+    </div>
+
+    <div class="callout">
+      <svg class="callout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
+      </svg>
+      <div class="callout-body">
+        <p>For each candidate, give a <strong>1–10 priority score</strong> (10 = strongly support, 1 = oppose). Free-text comments are optional but encouraged.</p>
+        <p>Items marked <strong>Recommended</strong> are the Lead Researcher's recommended set. You can re-open this page and resubmit any time before the deadline — your previous response will be replaced. Estimated time: ~10 minutes.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="num">1</span>
+        <h2>Your details</h2>
+      </div>
+      <div class="card-body">
+        <div class="field-group">
+          <div class="field">
+            <label for="voter-name">Full name <span class="req">*</span></label>
+            <input class="input" id="voter-name" type="text" autocomplete="name" placeholder="e.g. Elly Stolk" />
+          </div>
+          <div class="field">
+            <label for="voter-email">Email address <span class="req">*</span></label>
+            <input class="input" id="voter-email" type="email" autocomplete="email" placeholder="e.g. e.stolk@euroqol.org" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="num">2</span>
+        <h2>Case study candidates</h2>
+        <span class="badge-count" id="case-progress">0 / 10</span>
+      </div>
+      <div id="case-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="num">3</span>
+        <h2>Interview candidates</h2>
+        <span class="badge-count" id="interview-progress">0 / 13</span>
+      </div>
+      <div id="interview-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="num">4</span>
+        <h2>Open questions</h2>
+      </div>
+      <div id="open-questions"></div>
+    </div>
+
+    <div class="submit-bar">
+      <div class="progress-info">
+        <div class="label">Progress</div>
+        <div class="count"><strong id="total-progress">0</strong> of 23 candidates scored</div>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      </div>
+      <button class="btn btn-primary" id="submit-btn">
+        Submit vote
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;">
+          <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="status" id="status">
+      <svg class="status-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"></svg>
+      <div id="status-text"></div>
+    </div>
+
+  </main>
+
+  <footer>
+    NPEU · University of Oxford  &nbsp;|&nbsp;  NUS Nursing  &nbsp;|&nbsp;  Grant 2262-RA
+  </footer>
+
+  <script>
+    const SUPABASE_URL    = 'https://nhdaxjshvyyodqahgxou.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oZGF4anNodnl5b2RxYWhneG91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzQ0ODYsImV4cCI6MjA5NDAxMDQ4Nn0.xU9GuREHnWFLncs9jpWJW1wc1VhDsm6c47qIDufg0Ac';
+  </script>
+
+  <script>
+    /* ─────────── CANDIDATE DATA ─────────── */
+    const CASE_CANDIDATES = [
+      { id: 'A1',  priority: true,  title: 'UK NICE adoption + new 5L value set',
+        stage: 'Stage 5', region: 'UK (England)', period: '2008–2026',
+        rationale: 'Best-documented case; full causal arc with 2019 rejection and 2025 re-adoption (built-in counter-example via C2.4).' },
+      { id: 'A2',  priority: false, title: 'UK PROMs programme as "what not to do"',
+        stage: 'Stage 3', region: 'UK (England)', period: '2009–~2017',
+        rationale: 'Counter-example to success-led narratives; demonstrates barriers to sustained routine clinical use.' },
+      { id: 'A3',  priority: true,  title: 'EQ-5D diffusion in Asia-Pacific via member networks',
+        stage: 'Stage 4–5', region: 'Asia-Pacific', period: '2012–2026',
+        rationale: 'Member-driven diffusion (Nan Luo: 50 funded projects); HTA system development; C2H Japan MOU April 2026.' },
+      { id: 'A4',  priority: false, title: 'APERSU / Alberta provincial routine collection',
+        stage: 'Stage 3–4', region: 'Canada (Alberta)', period: '~2015–2024',
+        rationale: '~10-year programme; sustained, large-scale routine implementation; impact within and outside Canada currently unknown.' },
+      { id: 'A5',  priority: true,  title: 'POPCORN multi-country COVID study',
+        stage: 'Stage 2–4', region: 'Multi-country', period: '2020–ongoing',
+        rationale: 'EuroQol-funded (grants 238-2020RA, 460-RA); strong test case for Pathway 2; bounded, recent, multi-country.' },
+      { id: 'A6',  priority: false, title: 'Africa CDC / KEMRI-Wellcome Trust collaboration',
+        stage: 'Pre-1 / 1', region: 'Africa', period: '2024–ongoing',
+        rationale: 'Partial-failure case (US funding withdrawal); 5L value set development on the African continent.' },
+      { id: 'A7',  priority: false, title: 'EQ-DAPHNIE multi-country consortium',
+        stage: 'Stage 4', region: 'Multi-country (15+)', period: '2021–2025',
+        rationale: 'Harmonised data infrastructure across 15+ countries; status paper available.' },
+      { id: 'A8',  priority: true,  title: 'Independent European multi-wave dataset (Paul)',
+        stage: 'Stage 2–4', region: 'Europe', period: '~11 waves',
+        rationale: 'Independent uptake without documented EuroQol overture (directly tests C2.5); specifics pending Paul\'s confirmation.' },
+      { id: 'A9',  priority: false, title: 'EuroQol Academy Meeting outreach',
+        stage: 'Stage 1–2', region: 'Global', period: '~2016–ongoing',
+        rationale: 'Researcher-network development mechanism; broadens beyond instrument and funding pathways.' },
+      { id: 'A12', priority: false, title: 'EQ-DAPHNE consortium (population health)',
+        stage: 'Stage 4', region: 'Multi-country (15+)', period: '2021–2025',
+        rationale: 'EuroQol-funded multi-country population health infrastructure; potential overlap with A7 needs scoping.' }
+    ];
+
+    const INTERVIEW_CANDIDATES = [
+      { id: 'B1',  priority: true,  name: 'Frank de Charro',           level: 'L1 (Foundation)',
+        linked: 'A1 + breadth',
+        rationale: 'Founding CEO; pre-Bernhard institutional memory; NICE/NHS engagement (priority per 28 Apr).' },
+      { id: 'B2',  priority: true,  name: 'Bernhard Slaap',            level: 'L1 (Foundation)',
+        linked: 'A1 + breadth',
+        rationale: 'Executive Director; led professionalisation 2012-onwards; UK MOU history.' },
+      { id: 'B3',  priority: true,  name: 'Gauke Bonsel',              level: 'L1 (Members)',
+        linked: 'A5 + breadth',
+        rationale: 'Founding member; member registry historian; POPCORN co-investigator (priority per 28 Apr).' },
+      { id: 'B4',  priority: true,  name: 'Nan Luo',                   level: 'L2 (Researcher)',
+        linked: 'A3',
+        rationale: 'Most prolific funded PI (50 projects); anchor for Asia-Pacific case.' },
+      { id: 'B5',  priority: true,  name: 'Donna Rowen',               level: 'L2 (Researcher)',
+        linked: 'A1',
+        rationale: 'New UK 5L VS PI; first-hand on EuroQol-NICE collaboration.' },
+      { id: 'B6',  priority: true,  name: 'NICE representative (TBC)', level: 'L1 (HTA Agency)',
+        linked: 'A1',
+        rationale: 'HTA perspective on rejected/accepted 5L VS; decision-making process.' },
+      { id: 'B7',  priority: true,  name: 'Mandy van Reenen',          level: 'L1 (Foundation)',
+        linked: 'Breadth',
+        rationale: 'Office operations; institutional knowledge; annual reports.' },
+      { id: 'B8',  priority: false, name: 'Jeff Johnson',              level: 'L2 (Researcher)',
+        linked: 'A4, A7',
+        rationale: 'Alberta and EQ-DAPHNIE PI — reserve, activate if A4 or A7 promoted.' },
+      { id: 'B9',  priority: true,  name: 'Nancy Devlin',              level: 'L1 (Foundation/Members)',
+        linked: 'A1 + breadth',
+        rationale: 'Foundation Board chair; UK 5L VS author; methods book co-author.' },
+      { id: 'B10', priority: true,  name: 'ROM site clinician (TBC)',  level: 'L3 (Healthcare)',
+        linked: 'A2 or A4',
+        rationale: 'End-user perspective on EQ-5D in clinical practice (contingent on case selection).' },
+      { id: 'B11', priority: true,  name: 'Juanita Haagsma',           level: 'L2 (Researcher)',
+        linked: 'A5',
+        rationale: 'POPCORN PI (Erasmus MC; EuroQol-funded); anchor for Case 3.' },
+      { id: 'B12', priority: false, name: 'Feng Xie',                  level: 'L1 (ExCo Chair)',
+        linked: 'Breadth',
+        rationale: 'Current scientific direction — reserve, activate if governance breadth under-served.' },
+      { id: 'B14', priority: false, name: 'Mathieu Janssen',           level: 'L2 (Researcher)',
+        linked: 'A7 (reserve)',
+        rationale: 'EQ-DAPHNIE co-PI; POPCORN co-author — reserve, activate if A7 or A12 promoted.' }
+    ];
+
+    const OPEN_QUESTIONS = [
+      { id: 'Q1', text: 'Are there candidates not listed above that you would propose? Please give a one-line rationale and an estimate of access.' },
+      { id: 'Q2', text: 'Of the five maturity stages, which do you consider most important to cover in the three full case studies? Please rank your top three (e.g. "Stage 5, Stage 4, Stage 2").' },
+      { id: 'Q3', text: 'Do you support the Lead Researcher\'s recommended set (A1, A3, A5)? If not, what would you change and why?' },
+      { id: 'Q4', text: 'Do you support reclassifying EQ-VT and EQ-5D-Y as Pathway 2 validation evidence (rather than case studies)? (Yes / No / Comment)' },
+      { id: 'Q5', text: 'Any concerns about the case-study selection logic, the interview list, or the form itself?' }
+    ];
+
+    /* ─────────── STATE ─────────── */
+    const scores = {};
+    const comments = {};
+    const openAnswers = {};
+
+    /* ─────────── RENDER ─────────── */
+    function pipRow(id) {
+      let html = '';
+      for (let i = 1; i <= 10; i++) {
+        html += `<button class="pip" type="button" data-cand="${id}" data-val="${i}" aria-label="Score ${i}">${i}</button>`;
+      }
+      return html;
+    }
+
+    function renderCase(c) {
+      return `
+        <div class="candidate ${c.priority ? 'priority' : ''}" id="cand-${c.id}">
+          <div class="candidate-head">
+            <span class="candidate-id">${c.id}</span>
+            <div class="candidate-title">${c.title}</div>
+            ${c.priority ? '<span class="priority-badge">Recommended</span>' : ''}
+          </div>
+          <div class="candidate-meta">
+            <span>${c.stage}</span><span>${c.region}</span><span>${c.period}</span>
+          </div>
+          <p class="candidate-rationale">${c.rationale}</p>
+          <div class="score-block">
+            <div class="score-row">
+              <div class="score-pips" data-pips-for="${c.id}">${pipRow(c.id)}</div>
+              <span class="score-display" id="score-show-${c.id}">No score yet</span>
+              <button class="score-clear hidden" type="button" data-clear-for="${c.id}">Clear</button>
+            </div>
+          </div>
+          <textarea class="textarea" data-comment-for="${c.id}" placeholder="Add a comment (optional)"></textarea>
+        </div>
+      `;
+    }
+
+    function renderInterview(c) {
+      return `
+        <div class="candidate ${c.priority ? 'priority' : ''}" id="cand-${c.id}">
+          <div class="candidate-head">
+            <span class="candidate-id">${c.id}</span>
+            <div class="candidate-title">${c.name}</div>
+            ${c.priority ? '<span class="priority-badge">Recommended</span>' : ''}
+          </div>
+          <div class="candidate-meta">
+            <span>${c.level}</span><span>Linked: ${c.linked}</span>
+          </div>
+          <p class="candidate-rationale">${c.rationale}</p>
+          <div class="score-block">
+            <div class="score-row">
+              <div class="score-pips" data-pips-for="${c.id}">${pipRow(c.id)}</div>
+              <span class="score-display" id="score-show-${c.id}">No score yet</span>
+              <button class="score-clear hidden" type="button" data-clear-for="${c.id}">Clear</button>
+            </div>
+          </div>
+          <textarea class="textarea" data-comment-for="${c.id}" placeholder="Add a comment (optional)"></textarea>
+        </div>
+      `;
+    }
+
+    function renderOpen(q) {
+      return `
+        <div class="open-q">
+          <span class="q-num">${q.id}</span>
+          <p class="q-text">${q.text}</p>
+          <textarea class="textarea" data-open-for="${q.id}" placeholder="Your answer (optional)" style="min-height: 80px;"></textarea>
+        </div>
+      `;
+    }
+
+    document.getElementById('case-list').innerHTML      = CASE_CANDIDATES.map(renderCase).join('');
+    document.getElementById('interview-list').innerHTML = INTERVIEW_CANDIDATES.map(renderInterview).join('');
+    document.getElementById('open-questions').innerHTML = OPEN_QUESTIONS.map(renderOpen).join('');
+
+    /* ─────────── PIP INTERACTION ─────────── */
+    document.querySelectorAll('.score-pips').forEach(group => {
+      const candId = group.dataset.pipsFor;
+      const pips = group.querySelectorAll('.pip');
+
+      pips.forEach(pip => {
+        pip.addEventListener('mouseenter', () => {
+          const v = parseInt(pip.dataset.val, 10);
+          pips.forEach(p => {
+            const pv = parseInt(p.dataset.val, 10);
+            p.classList.toggle('in-range', pv <= v && !p.classList.contains('selected'));
+          });
+        });
+        pip.addEventListener('mouseleave', () => {
+          pips.forEach(p => p.classList.remove('in-range'));
+        });
+        pip.addEventListener('click', () => {
+          const v = parseInt(pip.dataset.val, 10);
+          scores[candId] = v;
+          pips.forEach(p => {
+            const pv = parseInt(p.dataset.val, 10);
+            p.classList.toggle('selected', pv <= v);
+            p.classList.remove('in-range');
+          });
+          const showEl = document.getElementById('score-show-' + candId);
+          showEl.classList.add('has-score');
+          showEl.innerHTML = `Score: <strong>${v}/10</strong>`;
+          document.getElementById('cand-' + candId).classList.add('scored');
+          document.querySelector(`[data-clear-for="${candId}"]`).classList.remove('hidden');
+          updateProgress();
+        });
+      });
+    });
+
+    /* ─────────── CLEAR ─────────── */
+    document.querySelectorAll('[data-clear-for]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const candId = btn.dataset.clearFor;
+        delete scores[candId];
+        document.querySelectorAll(`[data-pips-for="${candId}"] .pip`).forEach(p => {
+          p.classList.remove('selected', 'in-range');
+        });
+        const showEl = document.getElementById('score-show-' + candId);
+        showEl.classList.remove('has-score');
+        showEl.textContent = 'No score yet';
+        document.getElementById('cand-' + candId).classList.remove('scored');
+        btn.classList.add('hidden');
+        updateProgress();
+      });
+    });
+
+    /* ─────────── COMMENTS / OPEN ─────────── */
+    document.querySelectorAll('[data-comment-for]').forEach(el => {
+      el.addEventListener('input', e => { comments[el.dataset.commentFor] = e.target.value; });
+    });
+    document.querySelectorAll('[data-open-for]').forEach(el => {
+      el.addEventListener('input', e => { openAnswers[el.dataset.openFor] = e.target.value; });
+    });
+
+    /* ─────────── PROGRESS ─────────── */
+    function updateProgress() {
+      const caseDone = CASE_CANDIDATES.filter(c => scores[c.id]).length;
+      const intDone  = INTERVIEW_CANDIDATES.filter(c => scores[c.id]).length;
+      const total = caseDone + intDone;
+      document.getElementById('case-progress').textContent      = `${caseDone} / ${CASE_CANDIDATES.length}`;
+      document.getElementById('interview-progress').textContent = `${intDone} / ${INTERVIEW_CANDIDATES.length}`;
+      document.getElementById('total-progress').textContent     = total;
+      document.getElementById('progress-fill').style.width      = `${(total / 23) * 100}%`;
+    }
+
+    /* ─────────── STATUS ─────────── */
+    const ICONS = {
+      error:   '<path fill-rule="evenodd" d="M18 10A8 8 0 1 1 2 10a8 8 0 0 1 16 0Zm-8-5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />',
+      success: '<path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />',
+      info:    '<path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />'
+    };
+    function setStatus(msg, kind) {
+      const el = document.getElementById('status');
+      el.className = 'status show ' + kind;
+      el.querySelector('.status-icon').innerHTML = ICONS[kind] || ICONS.info;
+      document.getElementById('status-text').textContent = msg;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ─────────── SUBMIT ─────────── */
+    const isConfigured = SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+    const supabaseClient = isConfigured
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const name  = document.getElementById('voter-name').value.trim();
+      const email = document.getElementById('voter-email').value.trim();
+
+      if (!name || !email) { setStatus('Please enter both your name and email before submitting.', 'error'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setStatus('Please enter a valid email address.', 'error'); return; }
+
+      const scoredCount = Object.keys(scores).length;
+      if (scoredCount === 0) { setStatus('Please score at least one candidate before submitting.', 'error'); return; }
+
+      if (!isConfigured) {
+        const payload = { voter: { name, email }, scores, comments, openAnswers, submitted_at: new Date().toISOString() };
+        console.log('Preview-mode submission:', payload);
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `vote-${name.replace(/\s+/g, '_')}-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus(`Vote captured as a JSON download (${scoredCount} score${scoredCount === 1 ? '' : 's'}).`, 'info');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = 'Submitting…';
+
+      try {
+        const { data: voter, error: vErr } = await supabaseClient
+          .from('voters')
+          .upsert({ name, email: email.toLowerCase() }, { onConflict: 'email' })
+          .select()
+          .single();
+        if (vErr) throw vErr;
+
+        const { error: dErr } = await supabaseClient.from('scores').delete().eq('voter_id', voter.id);
+        if (dErr) throw dErr;
+
+        const scoreRows = Object.keys(scores).map(candId => ({
+          voter_id: voter.id,
+          candidate_id: candId,
+          candidate_type: candId.startsWith('A') ? 'case' : 'interview',
+          score: scores[candId],
+          comment: comments[candId] || null
+        }));
+        if (scoreRows.length) {
+          const { error: sErr } = await supabaseClient.from('scores').insert(scoreRows);
+          if (sErr) throw sErr;
+        }
+
+        const { error: oDelErr } = await supabaseClient.from('open_answers').delete().eq('voter_id', voter.id);
+        if (oDelErr) throw oDelErr;
+
+        const openRows = Object.keys(openAnswers)
+          .filter(qid => openAnswers[qid] && openAnswers[qid].trim())
+          .map(qid => ({ voter_id: voter.id, question_id: qid, answer: openAnswers[qid].trim() }));
+        if (openRows.length) {
+          const { error: oErr } = await supabaseClient.from('open_answers').insert(openRows);
+          if (oErr) throw oErr;
+        }
+
+        setStatus(`Thank you, ${name}. Your vote has been recorded (${scoreRows.length} score${scoreRows.length === 1 ? '' : 's'} saved). You can re-open this page and resubmit any time before the deadline.`, 'success');
+        btn.innerHTML = 'Submitted ✓';
+      } catch (err) {
+        console.error(err);
+        setStatus('Sorry — submission failed: ' + (err.message || err) + '. Please try again or contact Jeremy.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = 'Submit vote';
+      }
+    });
+  </script>
+</body>
+</html>
