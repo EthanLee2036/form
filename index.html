@@ -154,57 +154,92 @@
     .callout-body p { margin: 0; }
     .callout-body strong { font-weight: 600; }
 
-    /* ─── SECTION HEADERS (more prominent) ─── */
+    /* ─── SECTION HEADERS (large banner style) ─── */
     .section-intro {
-      margin: 48px 0 20px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid var(--brand);
+      margin: 56px 0 24px;
+      padding: 28px 32px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid var(--brand-border);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    /* subtle decorative blob */
+    .section-intro::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.10) 0%, transparent 70%);
+      pointer-events: none;
     }
     .section-intro .section-step {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 12.5px;
+      gap: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--brand);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
     }
     .section-intro .section-step .step-num {
-      width: 24px; height: 24px;
+      width: 36px; height: 36px;
       background: var(--brand);
       color: white;
-      border-radius: 999px;
+      border-radius: 10px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 17px;
       font-weight: 700;
       letter-spacing: 0;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
     }
     .section-intro h2 {
-      font-size: 24px;
+      font-size: 30px;
       font-weight: 700;
-      margin: 0 0 6px;
-      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
       color: var(--text);
+      line-height: 1.15;
+      position: relative;
+      z-index: 1;
     }
     .section-intro .section-sub {
-      font-size: 14.5px;
+      font-size: 15px;
       color: var(--text-2);
       margin: 0;
+      position: relative;
+      z-index: 1;
+      line-height: 1.55;
+    }
+    .section-intro .section-sub strong {
+      color: var(--text);
+      font-weight: 600;
     }
     .section-intro .section-count {
       display: inline-block;
-      margin-left: 10px;
-      font-size: 13px;
-      color: var(--text-3);
-      background: var(--surface-2);
-      padding: 3px 10px;
+      margin-left: 12px;
+      font-size: 13.5px;
+      color: var(--brand);
+      background: rgba(255, 255, 255, 0.7);
+      padding: 4px 12px;
       border-radius: 999px;
-      font-weight: 500;
+      font-weight: 600;
       vertical-align: middle;
+      border: 1px solid var(--brand-border);
+    }
+    @media (max-width: 600px) {
+      .section-intro { padding: 22px 20px; }
+      .section-intro h2 { font-size: 24px; }
+      .section-intro .step-num { width: 30px; height: 30px; font-size: 15px; }
     }
 
     /* ─── CARD (panel) ─── */
@@ -334,6 +369,29 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+    /* Scale hint under the pip row */
+    .score-scale-hint {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      color: var(--text-3);
+      margin-top: 6px;
+      max-width: 360px;
+      padding: 0 2px;
+    }
+    .score-scale-hint .endpoint {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .score-scale-hint .endpoint strong {
+      color: var(--text-2);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .score-scale-hint .endpoint.oppose strong { color: var(--danger); }
+    .score-scale-hint .endpoint.support strong { color: var(--success); }
     .score-pips {
       display: inline-flex;
       gap: 0;
@@ -564,7 +622,7 @@
         <span>Grant 2262-RA</span>
       </div>
       <div class="deadline-pill">
-        Deadline: <strong>EOD Tuesday 12 May 2026</strong>
+        Deadline: <strong>EOD Mon 11 May 2026</strong>
       </div>
     </div>
   </header>
@@ -577,14 +635,7 @@
       <p class="subtitle">Comprehensive Impact Assessment of EuroQol Research Foundation</p>
     </div>
 
-    <div class="callout">
-      <svg class="callout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
-      </svg>
-      <div class="callout-body">
-        <p>For each candidate, give a <strong>1–10 priority score</strong> (10 = strongly support, 1 = oppose). Free-text comments are optional but encouraged.</p>
-      </div>
-    </div>
+
 
     <!-- ─── SECTION 1: YOUR DETAILS ─── -->
     <div class="section-intro">
@@ -612,7 +663,7 @@
     <div class="section-intro">
       <div class="section-step"><span class="step-num">2</span> Step 2</div>
       <h2>Case study candidates <span class="section-count" id="case-progress">0 / 10 scored</span></h2>
-      <p class="section-sub">Score each candidate 1–10. Add a comment if you wish.</p>
+      <p class="section-sub">Score each candidate. Comments are optional.</p>
     </div>
 
     <div class="card">
@@ -623,7 +674,7 @@
     <div class="section-intro">
       <div class="section-step"><span class="step-num">3</span> Step 3</div>
       <h2>Interview candidates <span class="section-count" id="interview-progress">0 / 13 scored</span></h2>
-      <p class="section-sub">Score each candidate 1–10. Add a comment if you wish.</p>
+      <p class="section-sub">Score each candidate. Comments are optional.</p>
     </div>
 
     <div class="card">
@@ -790,6 +841,10 @@
               <span class="score-display" id="score-show-${c.id}">No score yet</span>
               <button class="score-clear hidden" type="button" data-clear-for="${c.id}">Clear</button>
             </div>
+            <div class="score-scale-hint">
+              <span class="endpoint oppose"><strong>1</strong> = oppose</span>
+              <span class="endpoint support"><strong>10</strong> = strongly support</span>
+            </div>
           </div>
           <textarea class="textarea" data-comment-for="${c.id}" placeholder="Add a comment (optional)"></textarea>
         </div>
@@ -812,6 +867,10 @@
               <div class="score-pips" data-pips-for="${c.id}">${pipRow(c.id)}</div>
               <span class="score-display" id="score-show-${c.id}">No score yet</span>
               <button class="score-clear hidden" type="button" data-clear-for="${c.id}">Clear</button>
+            </div>
+            <div class="score-scale-hint">
+              <span class="endpoint oppose"><strong>1</strong> = oppose</span>
+              <span class="endpoint support"><strong>10</strong> = strongly support</span>
             </div>
           </div>
           <textarea class="textarea" data-comment-for="${c.id}" placeholder="Add a comment (optional)"></textarea>
