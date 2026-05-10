@@ -38,6 +38,7 @@
 
       --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
       --shadow:    0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
 
       --radius-sm: 6px;
       --radius:    8px;
@@ -105,9 +106,7 @@
     }
 
     /* ─── PAGE HEADER ─── */
-    .page-header {
-      margin-bottom: 32px;
-    }
+    .page-header { margin-bottom: 32px; }
     .page-header .eyebrow {
       font-size: 12.5px;
       font-weight: 600;
@@ -136,7 +135,7 @@
       border: 1px solid var(--brand-border);
       border-radius: var(--radius);
       padding: 16px 18px;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
       display: flex;
       gap: 14px;
       align-items: flex-start;
@@ -152,11 +151,63 @@
       color: var(--text);
       line-height: 1.55;
     }
-    .callout-body p { margin: 0 0 6px; }
-    .callout-body p:last-child { margin-bottom: 0; }
+    .callout-body p { margin: 0; }
     .callout-body strong { font-weight: 600; }
 
-    /* ─── CARD ─── */
+    /* ─── SECTION HEADERS (more prominent) ─── */
+    .section-intro {
+      margin: 48px 0 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--brand);
+    }
+    .section-intro .section-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .section-intro .section-step .step-num {
+      width: 24px; height: 24px;
+      background: var(--brand);
+      color: white;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    .section-intro h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .section-intro .section-sub {
+      font-size: 14.5px;
+      color: var(--text-2);
+      margin: 0;
+    }
+    .section-intro .section-count {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 13px;
+      color: var(--text-3);
+      background: var(--surface-2);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+      vertical-align: middle;
+    }
+
+    /* ─── CARD (panel) ─── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -164,40 +215,6 @@
       box-shadow: var(--shadow-sm);
       margin-bottom: 24px;
       overflow: hidden;
-    }
-    .card-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .card-header .num {
-      width: 28px; height: 28px;
-      background: var(--brand);
-      color: white;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-    .card-header h2 {
-      margin: 0;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .card-header .badge-count {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--text-3);
-      background: var(--surface-2);
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-variant-numeric: tabular-nums;
     }
     .card-body {
       padding: 20px 24px;
@@ -280,26 +297,6 @@
       flex-shrink: 0;
       letter-spacing: 0.02em;
     }
-    .candidate.priority .candidate-id {
-      background: var(--brand-soft);
-      color: var(--brand);
-      border-color: var(--brand-border);
-    }
-    .priority-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--brand);
-      background: var(--brand-soft);
-      padding: 3px 8px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--brand-border);
-      flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
     .candidate-title {
       font-size: 15.5px;
       font-weight: 600;
@@ -316,10 +313,7 @@
       color: var(--text-3);
       margin-bottom: 10px;
     }
-    .candidate-meta span {
-      display: inline-flex;
-      align-items: center;
-    }
+    .candidate-meta span { display: inline-flex; align-items: center; }
     .candidate-meta span + span::before {
       content: "·";
       margin-right: 8px;
@@ -404,7 +398,7 @@
 
     /* ─── OPEN QUESTIONS ─── */
     .open-q {
-      padding: 18px 24px;
+      padding: 20px 24px;
       border-bottom: 1px solid var(--border);
     }
     .open-q:last-child { border-bottom: none; }
@@ -417,14 +411,36 @@
       background: var(--brand-soft);
       padding: 2px 8px;
       border-radius: var(--radius-sm);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .open-q .q-text {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 500;
       color: var(--text);
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       line-height: 1.5;
+    }
+    .open-q .stage-list {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+    .open-q .stage-list ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .open-q .stage-list li {
+      margin-bottom: 4px;
+    }
+    .open-q .stage-list li:last-child { margin-bottom: 0; }
+    .open-q .stage-list strong {
+      color: var(--text);
+      font-weight: 600;
     }
 
     /* ─── SUBMIT BAR ─── */
@@ -567,15 +583,17 @@
       </svg>
       <div class="callout-body">
         <p>For each candidate, give a <strong>1–10 priority score</strong> (10 = strongly support, 1 = oppose). Free-text comments are optional but encouraged.</p>
-        <p>Items marked <strong>Recommended</strong> are the Lead Researcher's recommended set. You can re-open this page and resubmit any time before the deadline — your previous response will be replaced. Estimated time: ~10 minutes.</p>
       </div>
     </div>
 
+    <!-- ─── SECTION 1: YOUR DETAILS ─── -->
+    <div class="section-intro">
+      <div class="section-step"><span class="step-num">1</span> Step 1</div>
+      <h2>Your details</h2>
+      <p class="section-sub">So we know who voted. Both fields required.</p>
+    </div>
+
     <div class="card">
-      <div class="card-header">
-        <span class="num">1</span>
-        <h2>Your details</h2>
-      </div>
       <div class="card-body">
         <div class="field-group">
           <div class="field">
@@ -590,29 +608,36 @@
       </div>
     </div>
 
+    <!-- ─── SECTION 2: CASE STUDIES ─── -->
+    <div class="section-intro">
+      <div class="section-step"><span class="step-num">2</span> Step 2</div>
+      <h2>Case study candidates <span class="section-count" id="case-progress">0 / 10 scored</span></h2>
+      <p class="section-sub">Score each candidate 1–10. Add a comment if you wish.</p>
+    </div>
+
     <div class="card">
-      <div class="card-header">
-        <span class="num">2</span>
-        <h2>Case study candidates</h2>
-        <span class="badge-count" id="case-progress">0 / 10</span>
-      </div>
       <div id="case-list"></div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="num">3</span>
-        <h2>Interview candidates</h2>
-        <span class="badge-count" id="interview-progress">0 / 13</span>
-      </div>
-      <div id="interview-list"></div>
+    <!-- ─── SECTION 3: INTERVIEWS ─── -->
+    <div class="section-intro">
+      <div class="section-step"><span class="step-num">3</span> Step 3</div>
+      <h2>Interview candidates <span class="section-count" id="interview-progress">0 / 13 scored</span></h2>
+      <p class="section-sub">Score each candidate 1–10. Add a comment if you wish.</p>
     </div>
 
     <div class="card">
-      <div class="card-header">
-        <span class="num">4</span>
-        <h2>Open questions</h2>
-      </div>
+      <div id="interview-list"></div>
+    </div>
+
+    <!-- ─── SECTION 4: OPEN QUESTIONS ─── -->
+    <div class="section-intro">
+      <div class="section-step"><span class="step-num">4</span> Step 4</div>
+      <h2>Open questions</h2>
+      <p class="section-sub">Both questions optional but appreciated.</p>
+    </div>
+
+    <div class="card">
       <div id="open-questions"></div>
     </div>
 
@@ -642,93 +667,96 @@
   </footer>
 
   <script>
-    const SUPABASE_URL    = 'https://nhdaxjshvyyodqahgxou.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5oZGF4anNodnl5b2RxYWhneG91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzQ0ODYsImV4cCI6MjA5NDAxMDQ4Nn0.xU9GuREHnWFLncs9jpWJW1wc1VhDsm6c47qIDufg0Ac';
+    const SUPABASE_URL    = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
   </script>
 
   <script>
     /* ─────────── CANDIDATE DATA ─────────── */
+    /* Case studies renumbered A1–A10 sequentially (A10/A11 in source were
+       reclassified as Pathway 2 evidence and excluded from voting).      */
     const CASE_CANDIDATES = [
-      { id: 'A1',  priority: true,  title: 'UK NICE adoption + new 5L value set',
+      { id: 'A1',  title: 'UK NICE adoption + new 5L value set',
         stage: 'Stage 5', region: 'UK (England)', period: '2008–2026',
         rationale: 'Best-documented case; full causal arc with 2019 rejection and 2025 re-adoption (built-in counter-example via C2.4).' },
-      { id: 'A2',  priority: false, title: 'UK PROMs programme as "what not to do"',
+      { id: 'A2',  title: 'UK PROMs programme as "what not to do"',
         stage: 'Stage 3', region: 'UK (England)', period: '2009–~2017',
         rationale: 'Counter-example to success-led narratives; demonstrates barriers to sustained routine clinical use.' },
-      { id: 'A3',  priority: true,  title: 'EQ-5D diffusion in Asia-Pacific via member networks',
+      { id: 'A3',  title: 'EQ-5D diffusion in Asia-Pacific via member networks',
         stage: 'Stage 4–5', region: 'Asia-Pacific', period: '2012–2026',
         rationale: 'Member-driven diffusion (Nan Luo: 50 funded projects); HTA system development; C2H Japan MOU April 2026.' },
-      { id: 'A4',  priority: false, title: 'APERSU / Alberta provincial routine collection',
+      { id: 'A4',  title: 'APERSU / Alberta provincial routine collection',
         stage: 'Stage 3–4', region: 'Canada (Alberta)', period: '~2015–2024',
         rationale: '~10-year programme; sustained, large-scale routine implementation; impact within and outside Canada currently unknown.' },
-      { id: 'A5',  priority: true,  title: 'POPCORN multi-country COVID study',
+      { id: 'A5',  title: 'POPCORN multi-country COVID study',
         stage: 'Stage 2–4', region: 'Multi-country', period: '2020–ongoing',
         rationale: 'EuroQol-funded (grants 238-2020RA, 460-RA); strong test case for Pathway 2; bounded, recent, multi-country.' },
-      { id: 'A6',  priority: false, title: 'Africa CDC / KEMRI-Wellcome Trust collaboration',
+      { id: 'A6',  title: 'Africa CDC / KEMRI-Wellcome Trust collaboration',
         stage: 'Pre-1 / 1', region: 'Africa', period: '2024–ongoing',
         rationale: 'Partial-failure case (US funding withdrawal); 5L value set development on the African continent.' },
-      { id: 'A7',  priority: false, title: 'EQ-DAPHNIE multi-country consortium',
+      { id: 'A7',  title: 'EQ-DAPHNIE multi-country consortium',
         stage: 'Stage 4', region: 'Multi-country (15+)', period: '2021–2025',
         rationale: 'Harmonised data infrastructure across 15+ countries; status paper available.' },
-      { id: 'A8',  priority: true,  title: 'Independent European multi-wave dataset (Paul)',
+      { id: 'A8',  title: 'Independent European multi-wave dataset (Paul)',
         stage: 'Stage 2–4', region: 'Europe', period: '~11 waves',
         rationale: 'Independent uptake without documented EuroQol overture (directly tests C2.5); specifics pending Paul\'s confirmation.' },
-      { id: 'A9',  priority: false, title: 'EuroQol Academy Meeting outreach',
+      { id: 'A9',  title: 'EuroQol Academy Meeting outreach',
         stage: 'Stage 1–2', region: 'Global', period: '~2016–ongoing',
         rationale: 'Researcher-network development mechanism; broadens beyond instrument and funding pathways.' },
-      { id: 'A12', priority: false, title: 'EQ-DAPHNE consortium (population health)',
+      { id: 'A10', title: 'EQ-DAPHNE consortium (population health)',
         stage: 'Stage 4', region: 'Multi-country (15+)', period: '2021–2025',
         rationale: 'EuroQol-funded multi-country population health infrastructure; potential overlap with A7 needs scoping.' }
     ];
 
+    /* Interview candidates renumbered B1–B13 sequentially (B13 in source was
+       Zhihao Yang as co-I excluded from interviews; B14 has been renumbered B13). */
     const INTERVIEW_CANDIDATES = [
-      { id: 'B1',  priority: true,  name: 'Frank de Charro',           level: 'L1 (Foundation)',
-        linked: 'A1 + breadth',
-        rationale: 'Founding CEO; pre-Bernhard institutional memory; NICE/NHS engagement (priority per 28 Apr).' },
-      { id: 'B2',  priority: true,  name: 'Bernhard Slaap',            level: 'L1 (Foundation)',
-        linked: 'A1 + breadth',
-        rationale: 'Executive Director; led professionalisation 2012-onwards; UK MOU history.' },
-      { id: 'B3',  priority: true,  name: 'Gauke Bonsel',              level: 'L1 (Members)',
-        linked: 'A5 + breadth',
-        rationale: 'Founding member; member registry historian; POPCORN co-investigator (priority per 28 Apr).' },
-      { id: 'B4',  priority: true,  name: 'Nan Luo',                   level: 'L2 (Researcher)',
-        linked: 'A3',
-        rationale: 'Most prolific funded PI (50 projects); anchor for Asia-Pacific case.' },
-      { id: 'B5',  priority: true,  name: 'Donna Rowen',               level: 'L2 (Researcher)',
-        linked: 'A1',
-        rationale: 'New UK 5L VS PI; first-hand on EuroQol-NICE collaboration.' },
-      { id: 'B6',  priority: true,  name: 'NICE representative (TBC)', level: 'L1 (HTA Agency)',
-        linked: 'A1',
-        rationale: 'HTA perspective on rejected/accepted 5L VS; decision-making process.' },
-      { id: 'B7',  priority: true,  name: 'Mandy van Reenen',          level: 'L1 (Foundation)',
-        linked: 'Breadth',
-        rationale: 'Office operations; institutional knowledge; annual reports.' },
-      { id: 'B8',  priority: false, name: 'Jeff Johnson',              level: 'L2 (Researcher)',
-        linked: 'A4, A7',
-        rationale: 'Alberta and EQ-DAPHNIE PI — reserve, activate if A4 or A7 promoted.' },
-      { id: 'B9',  priority: true,  name: 'Nancy Devlin',              level: 'L1 (Foundation/Members)',
-        linked: 'A1 + breadth',
-        rationale: 'Foundation Board chair; UK 5L VS author; methods book co-author.' },
-      { id: 'B10', priority: true,  name: 'ROM site clinician (TBC)',  level: 'L3 (Healthcare)',
-        linked: 'A2 or A4',
-        rationale: 'End-user perspective on EQ-5D in clinical practice (contingent on case selection).' },
-      { id: 'B11', priority: true,  name: 'Juanita Haagsma',           level: 'L2 (Researcher)',
-        linked: 'A5',
-        rationale: 'POPCORN PI (Erasmus MC; EuroQol-funded); anchor for Case 3.' },
-      { id: 'B12', priority: false, name: 'Feng Xie',                  level: 'L1 (ExCo Chair)',
-        linked: 'Breadth',
-        rationale: 'Current scientific direction — reserve, activate if governance breadth under-served.' },
-      { id: 'B14', priority: false, name: 'Mathieu Janssen',           level: 'L2 (Researcher)',
-        linked: 'A7 (reserve)',
-        rationale: 'EQ-DAPHNIE co-PI; POPCORN co-author — reserve, activate if A7 or A12 promoted.' }
+      { id: 'B1',  name: 'Frank de Charro',
+        affiliation: 'L1 — Foundation · Founding CEO (retired), EuroQol Research Foundation',
+        rationale: 'External relationships era; institutional memory pre-Bernhard; NICE/NHS engagement. Priority informant per 28 April meeting.' },
+      { id: 'B2',  name: 'Bernhard Slaap',
+        affiliation: 'L1 — Foundation · Executive Director, EuroQol Research Foundation',
+        rationale: 'Led professionalisation 2012 onwards; holds financial records and UK MOU history; sitting role, high access.' },
+      { id: 'B3',  name: 'Gauke Bonsel',
+        affiliation: 'L1 — Members · EuroQol founding member; POPCORN co-investigator',
+        rationale: 'Institutional memory; pre-Bernhard era history; member registry historian. Priority informant per 28 April meeting.' },
+      { id: 'B4',  name: 'Nan Luo',
+        affiliation: 'L2 — Researcher · NUS, Saw Swee Hock School of Public Health',
+        rationale: 'Most prolific funded PI (50 projects); anchor informant for the Asia-Pacific case study.' },
+      { id: 'B5',  name: 'Donna Rowen',
+        affiliation: 'L2 — Researcher · University of Sheffield',
+        rationale: 'PI of the new UK 5L valuation study; first-hand on EuroQol–NICE collaboration.' },
+      { id: 'B6',  name: 'NICE representative (TBC)',
+        affiliation: 'L1 — HTA Agency · NICE (specific individual to be confirmed)',
+        rationale: 'Key adopter; rejected (2019) then accepted (Dec 2025) UK 5L value set. HTA decision-making perspective.' },
+      { id: 'B7',  name: 'Mandy van Reenen',
+        affiliation: 'L1 — Foundation · EuroQol Office Advisor',
+        rationale: 'Office operations; institutional knowledge; holds annual reports. Advisor on this project — high access.' },
+      { id: 'B8',  name: 'Jeff Johnson',
+        affiliation: 'L2 — Researcher · University of Alberta; APERSU PI; EQ-DAPHNIE PI',
+        rationale: 'North-American capacity; routine ROM implementation and data harmonisation perspectives. Reserve — activate if A4 or A7 promoted.' },
+      { id: 'B9',  name: 'Nancy Devlin',
+        affiliation: 'L1 — Foundation / Members · Foundation Board Chair; University of Melbourne',
+        rationale: 'Foundation governance; UK 5L VS author (2018, 2024); methods book co-author. Active board chair — high access.' },
+      { id: 'B10', name: 'ROM site clinician (TBC)',
+        affiliation: 'L3 — Healthcare · Specific individual to be confirmed (contingent on case selection)',
+        rationale: 'End-user perspective on EQ-5D in clinical practice; implementation challenges and patient perspective.' },
+      { id: 'B11', name: 'Juanita Haagsma',
+        affiliation: 'L2 — Researcher · Erasmus MC; POPCORN PI',
+        rationale: 'PI of POPCORN study (EuroQol-funded, grants 238-2020RA and 460-RA); anchor informant for the POPCORN case study.' },
+      { id: 'B12', name: 'Feng Xie',
+        affiliation: 'L1 — Members · Chair, Executive Committee 2025–2028; McMaster University',
+        rationale: 'Current scientific direction; oversight of research funding; recent governance perspective.' },
+      { id: 'B13', name: 'Mathieu Janssen',
+        affiliation: 'L2 — Researcher · Erasmus MC; EQ-DAPHNIE co-PI; POPCORN co-author',
+        rationale: 'Population health norms; psychometrics; bolt-ons. Cross-cutting research perspective.' }
     ];
 
     const OPEN_QUESTIONS = [
       { id: 'Q1', text: 'Are there candidates not listed above that you would propose? Please give a one-line rationale and an estimate of access.' },
-      { id: 'Q2', text: 'Of the five maturity stages, which do you consider most important to cover in the three full case studies? Please rank your top three (e.g. "Stage 5, Stage 4, Stage 2").' },
-      { id: 'Q3', text: 'Do you support the Lead Researcher\'s recommended set (A1, A3, A5)? If not, what would you change and why?' },
-      { id: 'Q4', text: 'Do you support reclassifying EQ-VT and EQ-5D-Y as Pathway 2 validation evidence (rather than case studies)? (Yes / No / Comment)' },
-      { id: 'Q5', text: 'Any concerns about the case-study selection logic, the interview list, or the form itself?' }
+      { id: 'Q2',
+        text: 'Of the five maturity stages, which do you consider most important to cover in the three full case studies? Please rank your top three (e.g. "Stage 5, Stage 4, Stage 2").',
+        stages: true }
     ];
 
     /* ─────────── STATE ─────────── */
@@ -747,11 +775,10 @@
 
     function renderCase(c) {
       return `
-        <div class="candidate ${c.priority ? 'priority' : ''}" id="cand-${c.id}">
+        <div class="candidate" id="cand-${c.id}">
           <div class="candidate-head">
             <span class="candidate-id">${c.id}</span>
             <div class="candidate-title">${c.title}</div>
-            ${c.priority ? '<span class="priority-badge">Recommended</span>' : ''}
           </div>
           <div class="candidate-meta">
             <span>${c.stage}</span><span>${c.region}</span><span>${c.period}</span>
@@ -771,14 +798,13 @@
 
     function renderInterview(c) {
       return `
-        <div class="candidate ${c.priority ? 'priority' : ''}" id="cand-${c.id}">
+        <div class="candidate" id="cand-${c.id}">
           <div class="candidate-head">
             <span class="candidate-id">${c.id}</span>
             <div class="candidate-title">${c.name}</div>
-            ${c.priority ? '<span class="priority-badge">Recommended</span>' : ''}
           </div>
           <div class="candidate-meta">
-            <span>${c.level}</span><span>Linked: ${c.linked}</span>
+            <span>${c.affiliation}</span>
           </div>
           <p class="candidate-rationale">${c.rationale}</p>
           <div class="score-block">
@@ -794,10 +820,22 @@
     }
 
     function renderOpen(q) {
+      const stageList = q.stages ? `
+        <div class="stage-list">
+          <ul>
+            <li><strong>Stage 1 — Foundational / research-stage use.</strong> Developer-led studies (trials, validation work); feasibility and early uptake within the EuroQol research network.</li>
+            <li><strong>Stage 2 — Independent pilot implementation.</strong> External early adopters; real-world adoption without direct developer influence.</li>
+            <li><strong>Stage 3 — Routine clinical / institutional uptake.</strong> Embedded in everyday care or PROMs collection (e.g. routine outcome monitoring; structured PROMs programmes).</li>
+            <li><strong>Stage 4 — System or registry integration.</strong> Standardised or mandatory collection; integrated into national or regional datasets (registries; provincial schemes; multi-country consortia).</li>
+            <li><strong>Stage 5 — Policy / HTA use.</strong> Used in decision-making bodies; influences reimbursement or guideline decisions (NICE / UK is the canonical instance).</li>
+          </ul>
+        </div>
+      ` : '';
       return `
         <div class="open-q">
           <span class="q-num">${q.id}</span>
           <p class="q-text">${q.text}</p>
+          ${stageList}
           <textarea class="textarea" data-open-for="${q.id}" placeholder="Your answer (optional)" style="min-height: 80px;"></textarea>
         </div>
       `;
@@ -871,8 +909,8 @@
       const caseDone = CASE_CANDIDATES.filter(c => scores[c.id]).length;
       const intDone  = INTERVIEW_CANDIDATES.filter(c => scores[c.id]).length;
       const total = caseDone + intDone;
-      document.getElementById('case-progress').textContent      = `${caseDone} / ${CASE_CANDIDATES.length}`;
-      document.getElementById('interview-progress').textContent = `${intDone} / ${INTERVIEW_CANDIDATES.length}`;
+      document.getElementById('case-progress').textContent      = `${caseDone} / ${CASE_CANDIDATES.length} scored`;
+      document.getElementById('interview-progress').textContent = `${intDone} / ${INTERVIEW_CANDIDATES.length} scored`;
       document.getElementById('total-progress').textContent     = total;
       document.getElementById('progress-fill').style.width      = `${(total / 23) * 100}%`;
     }
